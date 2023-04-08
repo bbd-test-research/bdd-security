@@ -18,4 +18,13 @@ Feature: Data confidentiality
     Examples:
       | method              | username   | password   | sensitiveData               |
       | viewBobsProfile     | bob        | password   | Robert                      |
-
+      # teste de password vazia
+      | viewAlicesProfile	| alice	     |            |	Alice@website.com           |
+      # teste de password pequena
+      | viewAlicesProfile	| alice	     | p          |	Alice@website.com           |
+      # teste de username vazio
+      | viewBobsMessages    | 	         | password	  | Bob                         |
+      # teste de username pequeno
+      | viewBobsMessages    | b          | password	  | Bob                         |
+      # teste de username com caractere especial
+      | viewAlicesProfile    | 4l1c&     | password   | Alice@website.com           |    

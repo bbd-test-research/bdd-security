@@ -1,3 +1,5 @@
+# linhas adicionadas
+
 @authorisation
 Feature: Authorisation and Access Control
   Verify that the access control model is enforced so that only the authorised users have access to their own data
@@ -16,10 +18,24 @@ Feature: Authorisation and Access Control
     And they access the restricted resource: <method>
     Then the string: <sensitiveData> should be present in one of the HTTP responses
     Examples:
-      | method              | username | password | sensitiveData               |
-      | viewBobsProfile     | bob      | password | Robert                      |
-      | viewAlicesProfile   | alice    | password | alice@continuumsecurity.net |
-      | viewAllUsers        | admin    | password | User List                   |
+      | method               | username  | password | sensitiveData               |
+      | viewBobsProfile      | bob       | password | Robert                      |
+      # username E password vazios
+      | viewTinasProfile     |           |          | Tina                        |
+      # password vazia
+      | viewOnlineUsers      |   admin   |          | User List                   |
+      # username vazio
+      | viewOnlineUsers      |           | password | User List                   |
+      # password pequena
+      | viewPaulsBirthdate   | paul      | p        | 01/01/2001                  |
+      # username pequeno
+      | viewPaulsBirthdate   | p         | password | 01/01/2001                  |
+      # caracteres especiais username
+      | viewOnlineUsers      | !@$%&*()_ | password | User List                   |
+      # username com espaço
+      | viewOnlineUsers      | Pa ul     | password | User List                   |
+      # sensitivedata vazia
+      | viewBobsProfile      | bob       | password |                             |
 
 
   @iriusrisk-cwe-639
@@ -33,11 +49,24 @@ Feature: Authorisation and Access Control
     And the previously recorded HTTP Requests for <method> are replayed using the current session ID
     Then the string: <sensitiveData> should not be present in any of the HTTP responses
     Examples:
-      | method              | username | password | sensitiveData               |
-      | viewBobsProfile     | alice    | password | Robert                      |
-      | viewAlicesProfile   | bob      | password | alice@continuumsecurity.net |
-      | viewAllUsers        | alice    | password | User List                   |
-      | viewAllUsers        | bob      | password | User List                   |
+      | method               | username  | password | sensitiveData               |
+      | viewBobsProfile      | bob       | password | Robert                      |
+      # username E password vazios
+      | viewTinasProfile     |           |          | Tina                        |
+      # password vazia
+      | viewOnlineUsers      |   admin   |          | User List                   |
+      # username vazio
+      | viewOnlineUsers      |           | password | User List                   |
+      # password pequena
+      | viewPaulsBirthdate   | paul      | p        | 01/01/2001                  |
+      # username pequeno
+      | viewPaulsBirthdate   | p         | password | 01/01/2001                  |
+      # caracteres especiais username
+      | viewOnlineUsers      | !@$%&*()_ | password | User List                   |
+      # username com espaço
+      | viewOnlineUsers      | Pa ul     | password | User List                   |
+      # sensitivedata string vazia
+      | returnEmptyString    | bob       | password | ""                          |
 
   @iriusrisk-cwe-306
   Scenario Outline: Un-authenticated users should not be able to view restricted resources
@@ -51,3 +80,5 @@ Feature: Authorisation and Access Control
       | viewBobsProfile     |   Robert                      |
       | viewAlicesProfile   |   alice@continuumsecurity.net |
       | viewAllUsers        |   User List                   |
+    # sensitiveData vazia
+      | returnEmptyString   |                               |
